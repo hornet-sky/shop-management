@@ -9,7 +9,7 @@
           <el-input prefix-icon="iconfont icon-user" v-model="loginForm.username"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input type="password" prefix-icon="iconfont icon-password" v-model="loginForm.password" auto-complete="new-password" maxlength="20"></el-input>
+          <el-input type="password" prefix-icon="iconfont icon-password" v-model="loginForm.password" autocomplete="new-password" maxlength="20"></el-input>
         </el-form-item>
         <el-form-item class="btns">
           <el-button type="primary" @click="login" :loading="loggingin">登录</el-button>
