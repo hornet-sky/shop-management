@@ -129,6 +129,34 @@
         <el-button type="primary" @click="modify" :loading="modifying">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="分配角色"
+      :visible.sync="allotRoleDialogVisible"
+      width="50%"
+      :close-on-click-modal="false">
+      <el-form ref="allotRoleFormRef" :model="allotRoleForm" :rules="allotRoleFormRules" label-width="100px">
+        <el-form-item label="当前用户">
+          <el-input :value="allotRoleForm.username" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="当前角色">
+          <el-input :value="allotRoleForm.roleName" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="分配新角色" prop="rid">
+          <el-select v-model="allotRoleForm.rid" placeholder="请选择新角色">
+            <el-option
+              v-for="r in roles"
+              :key="r.id"
+              :label="r.roleName"
+              :value="r.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="allotRoleDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="allotRole" :loading="alloting">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -137,6 +165,7 @@ export default {
   name: 'Users',
   created () {
     this.loadUsers()
+    this.loadRoles()
   },
   data () {
     const checkEmail = (rule, value, callback) => {
@@ -209,7 +238,21 @@ export default {
           { validator: checkMobile, trigger: 'blur' }
         ]
       },
-      modifying: false
+      modifying: false,
+      allotRoleDialogVisible: false,
+      allotRoleForm: {
+        id: '',
+        username: '',
+        roleName: '',
+        rid: -1
+      },
+      allotRoleFormRules: {
+        rid: [
+          { required: true, message: '请先选择一个角色', trigger: 'blur' }
+        ]
+      },
+      alloting: false,
+      roles: []
     }
   },
   methods: {
@@ -240,8 +283,9 @@ export default {
         this.$message.success('删除用户成功')
       }
     },
-    handleSetting (index, row) {
-      console.log(index, row)
+    handleSetting (index, { id, username, role_name: roleName }) {
+      this.allotRoleForm = { id, username, roleName }
+      this.allotRoleDialogVisible = true
     },
     async handleUserStateChange (index, row) {
       const { data: res } = await this.$http.put(`users/${row.id}/state/${row.mg_state}`)
@@ -295,6 +339,31 @@ export default {
         this.modifying = false
         this.$message.success('修改用户成功')
       })
+    },
+    async loadRoles () {
+      const { data: res } = await this.$http.get('roles')
+      if (res.meta.status !== 200) {
+        return this.$message.error(`加载角色列表失败：${res.meta.msg}`)
+      }
+      this.roles = res.data
+    },
+    allotRole () {
+      this.$refs.allotRoleFormRef.validate(async valid => {
+        if (!valid) {
+          return
+        }
+        this.alloting = true
+        const { data: res } = await this.$http.put(`users/${this.allotRoleForm.id}/role`, { rid: this.allotRoleForm.rid })
+        if (res.meta.status !== 200) {
+          this.$message.error(`分配角色失败：${res.meta.msg}`)
+          this.alloting = false
+          return
+        }
+        this.loadUsers()
+        this.allotRoleDialogVisible = false
+        this.alloting = false
+        this.$message.success('分配角色成功')
+      })
     }
   },
   watch: {
@@ -308,6 +377,16 @@ export default {
     addDialogVisible (val) {
       if (!val) {
         this.$refs.addFormRef.resetFields()
+      }
+    },
+    modifyDialogVisible (val) {
+      if (!val) {
+        this.$refs.modifyFormRef.resetFields()
+      }
+    },
+    allotRoleDialogVisible (val) {
+      if (!val) {
+        this.$refs.allotRoleFormRef.resetFields()
       }
     }
   }
