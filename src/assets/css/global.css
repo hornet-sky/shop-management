@@ -19,3 +19,19 @@ html, body, #app {
 .el-pagination {
   margin-top: 15px;
 }
+.el-cascader-panel {
+  height: 204px;
+}
+.zk-table {
+  margin-top: 15px;
+  font-size: 13px;
+}
+.color-success {
+  color: #67C23A !important;
+}
+.color-warning {
+  color: #E6A23C !important;
+}
+.color-danger {
+  color: #F56C6C !important;
+}

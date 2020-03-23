@@ -190,7 +190,6 @@ export default {
       },
       users: [],
       total: 0,
-      currentPage: 5,
       searchKey: '',
       addDialogVisible: false,
       addForm: {
