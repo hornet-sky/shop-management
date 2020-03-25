@@ -35,3 +35,15 @@ html, body, #app {
 .color-danger {
   color: #F56C6C !important;
 }
+.margin-top-15 {
+  margin-top: 15px !important;
+}
+.el-steps {
+  margin: 20px 0;
+}
+.el-step__title {
+  font-size: 13px;
+}
+.ql-editor {
+  min-height: 400px;
+}

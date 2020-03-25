@@ -9,6 +9,7 @@ import Roles from '../views/rights/Roles.vue'
 import GoodsCategory from '../views/goods/GoodsCategory.vue'
 import GoodsList from '../views/goods/GoodsList.vue'
 import GoodsParams from '../views/goods/GoodsParams.vue'
+import GoodsAdd from '../views/goods/GoodsAdd.vue'
 
 Vue.use(VueRouter)
 
@@ -25,7 +26,8 @@ const routes = [
       { path: '/roles', component: Roles },
       { path: '/categories', component: GoodsCategory },
       { path: '/params', component: GoodsParams },
-      { path: '/goods', component: GoodsList }
+      { path: '/goods', component: GoodsList },
+      { path: '/goods/add', component: GoodsAdd }
     ]
   },
   { path: '/', redirect: '/login' }
