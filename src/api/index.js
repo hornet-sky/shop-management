@@ -1,16 +1,20 @@
 import Vue from 'vue'
 import axios from 'axios'
+import NProgress from 'nprogress'
 
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
 axios.interceptors.request.use(config => {
+  NProgress.start()
   config.headers.Authorization = sessionStorage.getItem('token')
   return config
 }, error => {
   return Promise.reject(error)
 })
 axios.interceptors.response.use(config => {
+  NProgress.done()
   return config
 }, error => {
+  NProgress.done()
   console.error('error from interceptor', error)
   return Promise.resolve({
     data: {
